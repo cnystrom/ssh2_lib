@@ -9,7 +9,7 @@ PRIVATE LIBSSH2_SESSION *session;
 
 PRIVATE void _free_session(void);
 
-/* FIX (1.0, 2026): send_file() and recv_file() get their session here.
+/* FIX (1.1, 2026): send_file() and recv_file() get their session here.
  * Outside scp_get() this was NULL, so use the init_session() session. */
 PUBLIC LIBSSH2_SESSION *_get_session(void)
 {
@@ -27,14 +27,14 @@ PRIVATE int _init_session(int sock, const char *username,
 	session = libssh2_session_init();
 	if (libssh2_session_handshake(session, sock)) {
 		nio_log_print("_init_session(): failure establishing SSH session\n");
-		_free_session();	/* FIX (1.0, 2026): drop the dead session */
+		_free_session();	/* FIX (1.1, 2026): drop the dead session */
 		return -1;
 	}
 
 	/* We could authenticate via password */
 	if (libssh2_userauth_password(session, username, passwd)) {
 		nio_log_print("_init_session(): authentication by password failed.\n");
-		_free_session();	/* FIX (1.0, 2026): was free_session() */
+		_free_session();	/* FIX (1.1, 2026): was free_session() */
 		return (-1);
 	}
 	return 0;
@@ -44,7 +44,7 @@ PRIVATE void _free_session(void)
 {
 	libssh2_session_disconnect(session, "Normal Shutdown.");
 	libssh2_session_free(session);
-	session = NULL;		/* FIX (1.0, 2026): see _get_session() */
+	session = NULL;		/* FIX (1.1, 2026): see _get_session() */
 }
 
 PUBLIC int scp_get(const char *from, const char *to, const char *pass,
@@ -71,7 +71,7 @@ PUBLIC int scp_get(const char *from, const char *to, const char *pass,
 
 	if (recv_file(from, to) == -1) {
 		nio_log_print("scp_get(): file copy failed.\n");
-		_free_session();	/* FIX (1.0, 2026): don't leave it set */
+		_free_session();	/* FIX (1.1, 2026): don't leave it set */
 		close_socket(sock);
 		return (-1);
 	}

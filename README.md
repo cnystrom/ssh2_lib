@@ -1,6 +1,11 @@
 # ssh2_lib: SSH sessions, commands, subsystems and SCP on libssh2
 
-Version 1.0 (2026). Split from NewIO 0.12, https://github.com/cnystrom/newio
+Version 1.1 (2026). Split from NewIO 0.12, https://github.com/cnystrom/newio
+
+## Versions
+
+- **1.0:** original code as published in NewIO 0.12 (tag `v1.0`).
+- **1.1:** this release, with the fixes listed below. See `CHANGES.md`.
 
 ssh2_lib is NewIO's thin layer over libssh2. It opens an SSH session on a
 connected socket with a password, opens a channel, runs a remote command,
@@ -25,7 +30,7 @@ From `ssh2_lib.h`, `session.h` and `channel.h`:
 | `int send_file(...)`, `int recv_file(...)` | SCP upload and download on the current session: `scp_get()`'s while it runs, otherwise the `init_session()` one. |
 | `int scp_get(from, to, pass, user, host)` | Connects to `host:22`, logs in, downloads one file and disconnects. |
 
-`ssh2_lib_version.h` defines `SSH2_LIB_VERSION` ("1.0") and `SSH2_LIB_ORIGIN`.
+`ssh2_lib_version.h` defines `SSH2_LIB_VERSION` ("1.1") and `SSH2_LIB_ORIGIN`.
 
 ## Dependencies
 
@@ -54,7 +59,7 @@ When unpacked from the release tarballs, the directory names include the
 version, so give the sibling paths:
 
 ```sh
-make SOCK_LIB_DIR=../sock_lib-1.0 LOG_LIB_DIR=../log_lib-1.0 test
+make SOCK_LIB_DIR=../sock_lib-1.1 LOG_LIB_DIR=../log_lib-1.1 test
 ```
 
 `make test` needs no SSH server. It checks that every function links
@@ -91,7 +96,7 @@ Contact: Chris Nystrom <cnystrom@gmail.com>
   has been deprecated since libssh2 1.7.0 and gave a warning. Only
   `sb.st_size` is used.
 - `scp_get.c:10-17`, `:30`, `:37`, `:47` and `:74-75`: bug fix, see
-  "Fixed in 1.0".
+  "Fixed in 1.1".
 - `Makefile:34-36`: `-I.. -I../sock_lib` became `-I. -I$(LOG_LIB_DIR)
   -I$(SOCK_LIB_DIR)`.
 - Added `ssh2_lib_version.h`, `test_ssh2_lib.c`, the sibling and `make test`
@@ -100,7 +105,7 @@ Contact: Chris Nystrom <cnystrom@gmail.com>
 - Left as is: `fingerprint` is set but not used (`session.c:29`). See
   "Known issues".
 
-## Fixed in 1.0
+## Fixed in 1.1
 
 - **`send_file()` and `recv_file()` only worked inside `scp_get()`**
   (`scp_get.c`). They take their session from `_get_session()`, which

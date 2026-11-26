@@ -77,7 +77,7 @@ int main(void)
 	CHECK(init_session(c, "nobody", "not-a-password") == -1);
 	close_socket(c);
 
-	/* 1.0 fix: send_file()/recv_file() used scp_get()'s session, which
+	/* 1.1 fix: send_file()/recv_file() used scp_get()'s session, which
 	 * is NULL outside scp_get(). They now use init_session()'s. Here
 	 * that session never finished its handshake, so they fail cleanly
 	 * (NewIO 0.12 passed NULL to libssh2). */
